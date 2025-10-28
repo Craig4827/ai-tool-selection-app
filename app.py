@@ -13,28 +13,25 @@ selected_function = st.selectbox("Business Function", list(function_tooltype_map
 tool_types = function_tooltype_map[selected_function]
 selected_tool_type = st.selectbox("Tool Type", tool_types)
 
-# Step 3: Select AI Tool
+# Step 3: Recommend AI Tools
+st.header("Recommended AI Tools")
 tools = tooltype_tool_map.get(selected_tool_type, [])
-tool_names = [tool['Tool'] for tool in tools]
-selected_tool = st.selectbox("AI Tool", tool_names)
+if tools:
+    scores = {}
+    for tool in tools:
+        st.markdown(f"**{tool['Tool']}**")
+        st.write(f"Complexity: {tool['Complexity']}, Cost: {tool['Cost']}, Scalability: {tool['Scalability']}, Impact: {tool['Impact']}")
+        score = st.slider(f"Score {tool['Tool']} (1-5)", 1, 5, 3)
+        scores[tool['Tool']] = score
 
-# Step 4: Show Tool Details
-st.header("Tool Details")
-for tool in tools:
-    if tool['Tool'] == selected_tool:
-        st.write(f"**Complexity:** {tool['Complexity']}")
-        st.write(f"**Cost Structure:** {tool['Cost']}")
-        st.write(f"**Scalability:** {tool['Scalability']}")
-        st.write(f"**Impact Potential:** {tool['Impact']}")
-
-# Step 5: Score Tool
-st.header("Score Tool")
-score = st.slider(f"Score {selected_tool} (1-5)", 1, 5, 3)
-
-# Recommendation
-st.header("Recommendation")
-st.success(f"Based on your selection and score, we recommend: {selected_tool}")
-st.write("Implementation Advice:")
-st.write("- Check integration options")
-st.write("- Start with a pilot/test")
-st.write("- Monitor performance and ROI")
+    # Recommend top-rated tool(s)
+    if scores:
+        max_score = max(scores.values())
+        recommended = [tool for tool, s in scores.items() if s == max_score]
+        st.success("Top Recommended Tool(s): " + ", ".join(recommended))
+        st.write("Implementation Advice:")
+        st.write("- Check integration options")
+        st.write("- Start with a pilot/test")
+        st.write("- Monitor performance and ROI")
+else:
+    st.warning("No tools available for this tool type.")
