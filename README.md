@@ -7,7 +7,7 @@ This Streamlit app helps users select AI tools based on business function and to
 - Select business function
 - Choose tool type
 - View and score AI tools
-- Get top recommendations
+- Get top recommendations with links
 
 ## Setup
 ```bash
